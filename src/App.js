@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const apiKey = process.env.REACT_APP_API_KEY;
@@ -24,7 +24,35 @@ function App() {
     }
   };
 
-  console.log(data);
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          axios
+            .get(
+              `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
+            )
+            .then((response) => {
+              setData(response.data);
+              setError(null);
+            })
+            .catch((error) => {
+              setError(
+                "An error occurred while fetching the weather data. Please try again."
+              );
+            });
+        },
+        (error) =>
+          setError(
+            "Unable to retrieve your location. Please enter a city name manually."
+          )
+      );
+    } else {
+      setError("Geolocation is not supported by your browser.");
+    }
+  }, []);
+
   return (
     <div className="app">
       <div className="search">
@@ -66,7 +94,6 @@ function App() {
                   <p>Humidity</p>
                 </div>
                 <div className="wind">
-                  {/* {data.wind ? <p className="bold">{data.wind.speed.toFixed()} KMH</p> : null} */}
                   <p className="bold">{data.wind?.speed.toFixed()} KMH</p>
                   <p>Wind Speed</p>
                 </div>
