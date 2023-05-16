@@ -88,7 +88,7 @@ h1 {
   justify-content: space-evenly;
   text-align: center;
   width: 100%;
-  margin: 1rem auto;
+  margin: 0 auto 10rem;
   padding: 1rem;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.5);
@@ -96,4 +96,13 @@ h1 {
 
 .bold {
   font-weight: 700;
+}
+
+.error {
+  background-color: rgba(255, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: .6rem;
+  margin: 5rem auto;
+  display: flex;
+  text-align: center;
 }
