@@ -9,17 +9,21 @@ function App() {
   const [error, setError] = useState(null);
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`;
 
+  const fetchData = (url) => {
+    axios
+      .get(url)
+      .then((response) => {
+        setData(response.data);
+        setError(null);
+      })
+      .catch((error) => {
+        setError("An error occurred. Please check your input and try again.");
+      });
+  };
+
   const searchLocation = (event) => {
     if (event.key === "Enter") {
-      axios
-        .get(url)
-        .then((response) => {
-          setData(response.data);
-          setError(null);
-        })
-        .catch((error) => {
-          setError("An error occurred. Please check your input and try again.");
-        });
+      fetchData(url);
       setLocation("");
     }
   };
@@ -29,19 +33,8 @@ function App() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          axios
-            .get(
-              `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
-            )
-            .then((response) => {
-              setData(response.data);
-              setError(null);
-            })
-            .catch((error) => {
-              setError(
-                "An error occurred while fetching the weather data. Please try again."
-              );
-            });
+          const locationUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
+          fetchData(locationUrl);
         },
         (error) =>
           setError(
